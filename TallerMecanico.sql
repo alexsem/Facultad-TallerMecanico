@@ -1,9 +1,16 @@
+USE TallerMecanico
+GO
+
+DROP TABLE IF EXISTS dbo.autos
+
 CREATE TABLE dbo.autos (
-	id			INT				IDENTITY(1,1) NOT NULL,
+	id_auto		INT				IDENTITY(1,1) NOT NULL,
 	nombre		VARCHAR(50)		NOT NULL
 )
 
 INSERT INTO dbo.autos (nombre) VALUES ('Ford Ka')
+
+DROP TABLE IF EXISTS dbo.auto_partes
 
 CREATE TABLE dbo.auto_partes (
 	id_auto_partes		SMALLINT		IDENTITY(1,1) NOT NULL,

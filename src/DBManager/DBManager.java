@@ -27,7 +27,7 @@ public class DBManager {
 		return instance;
 	}
 
-	public static Connection connect() {
+	public Connection connect() {
 		Connection c = null;
 		try {
 			Class.forName(DB_DRIVER);
@@ -46,7 +46,7 @@ public class DBManager {
 		return c;
 	}
 
-	public static void shutdown() throws Exception {
+	public void shutdown() throws Exception {
 		Connection c = connect();
 		Statement s = c.createStatement();
 		s.execute("SHUTDOWN");

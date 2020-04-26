@@ -1,20 +1,21 @@
-package test;
+package Test;
 
-import ImplementacionDeIntefaces.*;
 import Clases.*;
 import Dentre.Dentre;
+import Interfaces.IAutoPartes;
+import JDBC.*;
 
 import java.util.ArrayList;
 
-public class test {
+public class Test {
+	
+	static IAutoPartes autoParte = new AutoPartesDAOImpl();
 
 	public static void main(String[] args) {
 
 		boolean sigue = true;
 
 		// AutoPartesDAOImpl autoPartesImpl = null;
-
-		test menu = new test();
 
 		while (sigue) {
 
@@ -31,19 +32,19 @@ public class test {
 
 			switch (opcion) {
 			case 1:
-				test.insertarAutoParte();
+				Test.insertarAutoParte();
 				break;
 			case 2:
-				test.buscarAutoParte();
+				Test.buscarAutoParte();
 				break;
 			case 3:
-				menu.listarAutoPartes();
+				Test.listarAutoPartes();
 				break;
 			case 4:
-				test.actualizarAutoParte();
+				Test.actualizarAutoParte();
 				break;
 			case 5:
-				test.borrarAutoParte();
+				Test.borrarAutoParte();
 				break;
 			case 99:
 				System.out.println("Saliendo del sistema.");
@@ -58,7 +59,6 @@ public class test {
 	}
 
 	private static void actualizarAutoParte() {
-		AutoPartesDAOImpl autoParteImpl = new AutoPartesDAOImpl();
 		int idAutoParte = 0;
 		int nueva_cantidad;
 
@@ -66,58 +66,55 @@ public class test {
 		nueva_cantidad = Dentre.entero("Ingrese la nueva cantidad: ");
 
 		try {
-			autoParteImpl.actualizarCantidadAutoParte(idAutoParte, nueva_cantidad);
-		} catch (MyException e) {
-			System.out.println("No se encontro el ID de la auto parte a eliminar");
+			autoParte.actualizarCantidadAutoParte(idAutoParte, nueva_cantidad);
+		} catch (TallerMecanicoException e) {
+			System.out.println("No se encontro el ID de la auto parte a eliminar" + e.getMessage());
 		} catch (Exception e) {
-			System.out.println("Hubo un problema la base de datos");
+			System.out.println("Hubo un problema la base de datos" + e.getMessage());
 		}
 
 	}
 
 	private static void borrarAutoParte() {
-		AutoPartesDAOImpl autoParteImpl = new AutoPartesDAOImpl();
 		int idAutoParte = 0;
 
 		idAutoParte = Dentre.entero("Ingrese el ID de la auto parte a eliminar: ");
 
 		try {
-			autoParteImpl.borrarAutoParte(idAutoParte);
+			autoParte.borrarAutoParte(idAutoParte);
 
 			System.out.println("Se elimino la auto parte con ID: " + idAutoParte);
 
-		} catch (MyException e) {
-			System.out.println("No se encontro el ID de la auto parte a eliminar");
+		} catch (TallerMecanicoException e) {
+			System.out.println("No se encontro el ID de la auto parte a eliminar" + e.getMessage());
 		} catch (Exception e) {
-			System.out.println("Hubo un problema la base de datos");
+			System.out.println("Hubo un problema la base de datos" + e.getMessage());
 		}
 
 	}
 
 	private static void buscarAutoParte() {
-		AutoPartesDAOImpl autoParteImpl = new AutoPartesDAOImpl();
-		AutoPartes autoParte = null;
+		AutoPartes autoParteBuscada = null;
 		int idAutoParte = 0;
 
 		idAutoParte = Dentre.entero("Ingrese el ID de la auto parte: ");
 
 		try {
-			autoParte = autoParteImpl.buscarAutoParte(idAutoParte);
+			autoParteBuscada = autoParte.buscarAutoParte(idAutoParte);
 
-			System.out.println("Se encontro la auto parte con ID: " + autoParte.getIdAutoPartes());
-			System.out.println("Descripcion: " + autoParte.getDescripcion());
-			System.out.println("Cantidad Disponible: " + autoParte.getCantidad());
+			System.out.println("Se encontro la auto parte con ID: " + autoParteBuscada.getIdAutoPartes());
+			System.out.println("Descripcion: " + autoParteBuscada.getDescripcion());
+			System.out.println("Cantidad Disponible: " + autoParteBuscada.getCantidad());
 
-		} catch (MyException e) {
-			System.out.println("No se pudo encontrar el registro");
+		} catch (TallerMecanicoException e) {
+			System.out.println("No se pudo encontrar el registro" + e.getMessage());
 		} catch (Exception e) {
-			System.out.println("Hubo un error en la base de datos");
+			System.out.println("Hubo un error en la base de datos" + e.getMessage());
 		}
 	}
 
 	private static void insertarAutoParte() {
-		AutoPartesDAOImpl autoParteImpl = new AutoPartesDAOImpl();
-
+		
 		String descripcion = null;
 		int cantidad_disponible = 0;
 
@@ -127,29 +124,27 @@ public class test {
 		cantidad_disponible = Dentre.entero("Ingrese la cantidad a agregar: ");
 
 		try {
-			autoParteImpl.insertarAutoParte(descripcion, cantidad_disponible);
-		} catch (MyException e) {
-			System.out.println("No se pudo insertar el registro correctamente");
+			autoParte.insertarAutoParte(descripcion, cantidad_disponible);
+		} catch (TallerMecanicoException e) {
+			System.out.println("No se pudo insertar el registro correctamente" + e.getMessage());
 		} catch (Exception e) {
-			System.out.println("Hubo un error en la base de datos");
+			System.out.println("Hubo un error en la base de datos" + e.getMessage());
 		}
 
 	}
 
-	private void listarAutoPartes() {
+	private static void listarAutoPartes() {
 		ArrayList<AutoPartes> listaAutoParte = new ArrayList<AutoPartes>();
-
-		AutoPartesDAOImpl autoPartesImpl = new AutoPartesDAOImpl();
-
+		
 		try {
-			listaAutoParte = autoPartesImpl.listarAutoPartes();
+			listaAutoParte = autoParte.listarAutoPartes();
 
 			for (int i = 0; i < listaAutoParte.size(); i++) {
 				System.out.println(listaAutoParte.get(i).getIdAutoPartes() + " "
 						+ listaAutoParte.get(i).getDescripcion() + " " + listaAutoParte.get(i).getCantidad());
 			}
 		} catch (Exception e) {
-			System.out.println("Hubo un error en la base de datos");
+			System.out.println("Hubo un error en la base de datos: " + e.getMessage());
 		}
 
 		return;
